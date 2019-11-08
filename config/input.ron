@@ -1,0 +1,6 @@
+(
+  actions: {
+    "leap": [[Key(Space)]]
+  },
+  axes: {}
+)
