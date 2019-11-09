@@ -1,7 +1,7 @@
 extern crate amethyst;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader},
-  core::transform::Transform,
+  core::{math::Vector3, transform::Transform},
   ecs::prelude::World,
   prelude::*,
   renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
@@ -25,6 +25,11 @@ impl SimpleState for Game {
     initialise_world(world);
     initialise_player(world, self.sprite_sheet_handle.clone().unwrap());
     initialise_camera(world);
+    spawn_lily_pad(
+      world,
+      Vector3::new(50.0, 50.0, 0.0),
+      self.sprite_sheet_handle.clone().unwrap(),
+    );
   }
 
   fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
@@ -44,12 +49,13 @@ fn initialise_player(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
   };
   let mut local_transform = Transform::default();
   local_transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 0.0);
+  local_transform.set_scale(Vector3::new(0.8, 0.8, 0.8));
 
   world
     .create_entity()
     .with(SpriteRender {
       sprite_sheet: sprite_sheet_handle,
-      sprite_number: 1,
+      sprite_number: 0,
     })
     .with(local_transform)
     .with(components::Player)
@@ -94,4 +100,23 @@ fn load_sprite_sheet(world: &mut World, file_name: &str) -> Handle<SpriteSheet> 
     (),
     &sprite_sheet_store,
   )
+}
+
+fn spawn_lily_pad(
+  world: &mut World,
+  position: Vector3<f32>,
+  sprite_sheet_handle: Handle<SpriteSheet>,
+) {
+  let mut local_transform = Transform::default();
+  local_transform.set_translation(position);
+  local_transform.set_scale(Vector3::new(1.2, 1.2, 1.2));
+
+  world
+    .create_entity()
+    .with(SpriteRender {
+      sprite_sheet: sprite_sheet_handle,
+      sprite_number: 1,
+    })
+    .with(local_transform)
+    .build();
 }
