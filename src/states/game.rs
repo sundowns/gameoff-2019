@@ -38,8 +38,12 @@ fn initialise_world(world: &mut World) {
 }
 
 fn initialise_player(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
+  let (arena_height, arena_width) = {
+    let config = &world.read_resource::<ArenaConfig>();
+    (config.height, config.width)
+  };
   let mut local_transform = Transform::default();
-  local_transform.set_translation_xyz(0.0, 0.0, 0.0);
+  local_transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 0.0);
 
   world
     .create_entity()
@@ -59,7 +63,7 @@ fn initialise_camera(world: &mut World) {
     (config.height, config.width)
   };
   let mut transform = Transform::default();
-  transform.set_translation_z(1.0);
+  transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 1.0);
   world
     .create_entity()
     .with(Camera::standard_2d(arena_width, arena_height))
