@@ -30,9 +30,7 @@ impl<'s> System<'s> for LeapingSystem {
     for (_player, _leap, _transform) in (&mut players, &mut leaps, &transforms).join() {
       if _leap.leap_ready {
         if let Some((screen_x, screen_y)) = input.mouse_position() {
-          println!("no?"); // TODO: Do i have to attach active camera to something?? idgi
           if let Some(camera_entity) = active_camera.entity {
-            println!("cammy here");
             let camera = cameras.get(camera_entity).unwrap();
             let transform = transforms.get(camera_entity).unwrap();
             let world_position = camera.projection().screen_to_world_point(
@@ -41,11 +39,16 @@ impl<'s> System<'s> for LeapingSystem {
               transform,
             );
 
-            // TODO: perform sense checks (range??) on world pos
+            let attempted_leap_distance = Vector2::new(
+              world_position.x - _transform.translation().x,
+              world_position.y - _transform.translation().y,
+            )
+            .magnitude();
 
             match input.action_is_down("leap") {
               Some(_is_down) => {
-                if _is_down {
+                println!("magnitude {}", attempted_leap_distance);
+                if _is_down && attempted_leap_distance <= _leap.range {
                   _leap.leap_ready = false;
 
                   // TODO: Apply a force?? idk

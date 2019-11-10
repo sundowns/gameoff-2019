@@ -4,7 +4,9 @@ use amethyst::{
   core::{math::Vector3, transform::Transform},
   ecs::prelude::World,
   prelude::*,
-  renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
+  renderer::{
+    ActiveCamera, Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture,
+  },
 };
 
 use crate::components;
@@ -59,7 +61,7 @@ fn initialise_player(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
     })
     .with(local_transform)
     .with(components::Player)
-    .with(components::Leap::default())
+    .with(components::Leap::new(40.0))
     .build();
 }
 
@@ -68,13 +70,19 @@ fn initialise_camera(world: &mut World) {
     let config = &world.read_resource::<ArenaConfig>();
     (config.height, config.width)
   };
+
   let mut transform = Transform::default();
   transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 1.0);
-  world
+  // let camera = Camera::standard_2d(arena_width, arena_height);
+  let entity = world
     .create_entity()
     .with(Camera::standard_2d(arena_width, arena_height))
     .with(transform)
     .build();
+
+  world.insert(ActiveCamera {
+    entity: Some(entity),
+  });
 }
 
 fn load_sprite_sheet(world: &mut World, file_name: &str) -> Handle<SpriteSheet> {
