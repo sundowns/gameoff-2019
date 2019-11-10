@@ -3,9 +3,10 @@ use amethyst::{
     math::{Point3, Vector2},
     Transform,
   },
-  ecs::prelude::{Join, Read, ReadStorage, System, WriteStorage},
+  ecs::prelude::{Join, Read, ReadExpect, ReadStorage, System, WriteStorage},
   input::{InputHandler, StringBindings},
   renderer::{ActiveCamera, Camera},
+  window::ScreenDimensions,
 };
 
 use crate::components::Leap;
@@ -21,11 +22,12 @@ impl<'s> System<'s> for LeapingSystem {
     ReadStorage<'s, Transform>,
     ReadStorage<'s, Camera>,
     Read<'s, ActiveCamera>,
+    ReadExpect<'s, ScreenDimensions>,
   );
 
   fn run(
     &mut self,
-    (mut players, input, mut leaps, transforms, cameras, active_camera): Self::SystemData,
+    (mut players, input, mut leaps, transforms, cameras, active_camera, screen): Self::SystemData,
   ) {
     for (_player, _leap, _transform) in (&mut players, &mut leaps, &transforms).join() {
       if _leap.leap_ready {
@@ -35,7 +37,7 @@ impl<'s> System<'s> for LeapingSystem {
             let transform = transforms.get(camera_entity).unwrap();
             let world_position = camera.projection().screen_to_world_point(
               Point3::new(screen_x, screen_y, 0.0),
-              Vector2::new(500.0, 500.0), // TODO: get screen res
+              Vector2::new(screen.width(), screen.height()), // TODO: get screen res
               transform,
             );
 
