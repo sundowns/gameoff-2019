@@ -70,7 +70,7 @@ fn initialise_player(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
     .create_entity()
     .with(SpriteRender {
       sprite_sheet: sprite_sheet_handle,
-      sprite_number: 1,
+      sprite_number: 2,
     })
     .with(local_transform)
     .with(components::Reticle)
