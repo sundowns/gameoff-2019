@@ -16,7 +16,7 @@ pub struct LeapingSystem;
 
 impl<'s> System<'s> for LeapingSystem {
   type SystemData = (
-    WriteStorage<'s, Player>,
+    ReadStorage<'s, Player>,
     Read<'s, InputHandler<StringBindings>>,
     WriteStorage<'s, Leap>,
     ReadStorage<'s, Transform>,
@@ -27,9 +27,9 @@ impl<'s> System<'s> for LeapingSystem {
 
   fn run(
     &mut self,
-    (mut players, input, mut leaps, transforms, cameras, active_camera, screen): Self::SystemData,
+    (players, input, mut leaps, transforms, cameras, active_camera, screen): Self::SystemData,
   ) {
-    for (_player, _leap, _transform) in (&mut players, &mut leaps, &transforms).join() {
+    for (_player, _leap, _transform) in (&players, &mut leaps, &transforms).join() {
       if _leap.leap_ready {
         if let Some((screen_x, screen_y)) = input.mouse_position() {
           if let Some(camera_entity) = active_camera.entity {
@@ -37,7 +37,7 @@ impl<'s> System<'s> for LeapingSystem {
             let transform = transforms.get(camera_entity).unwrap();
             let world_position = camera.projection().screen_to_world_point(
               Point3::new(screen_x, screen_y, 0.0),
-              Vector2::new(screen.width(), screen.height()), // TODO: get screen res
+              Vector2::new(screen.width(), screen.height()),
               transform,
             );
 

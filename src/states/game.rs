@@ -53,15 +53,27 @@ fn initialise_player(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
   local_transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 0.0);
   local_transform.set_scale(Vector3::new(0.8, 0.8, 0.8));
 
+  // Create our player
+  world
+    .create_entity()
+    .with(SpriteRender {
+      sprite_sheet: sprite_sheet_handle.clone(),
+      sprite_number: 0,
+    })
+    .with(local_transform.clone())
+    .with(components::Player)
+    .with(components::Leap::new(40.0))
+    .build();
+
+  // Create our player's reticle
   world
     .create_entity()
     .with(SpriteRender {
       sprite_sheet: sprite_sheet_handle,
-      sprite_number: 0,
+      sprite_number: 1,
     })
     .with(local_transform)
-    .with(components::Player)
-    .with(components::Leap::new(40.0))
+    .with(components::Reticle)
     .build();
 }
 
@@ -73,7 +85,7 @@ fn initialise_camera(world: &mut World) {
 
   let mut transform = Transform::default();
   transform.set_translation_xyz(arena_width / 2.0, arena_height / 2.0, 1.0);
-  // let camera = Camera::standard_2d(arena_width, arena_height);
+
   let entity = world
     .create_entity()
     .with(Camera::standard_2d(arena_width, arena_height))

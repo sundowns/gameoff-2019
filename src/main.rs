@@ -33,6 +33,7 @@ fn main() -> amethyst::Result<()> {
     .with_bundle(InputBundle::<StringBindings>::new().with_bindings_from_file(key_bindings_path)?)?
     .with_bundle(UiBundle::<StringBindings>::new())?
     .with(systems::LeapingSystem, "leaping_system", &["input_system"])
+    .with(systems::AimingSystem, "aiming_system", &[])
     .with_bundle(
       RenderingBundle::<DefaultBackend>::new()
         .with_plugin(
@@ -46,6 +47,8 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderFlat2D::default())
         .with_plugin(RenderUi::default()),
     )?;
+
+    // TODO: would it be possible to draw some kind of watery background - custom render passes maybe??
 
   let mut game = Application::build(assets_dir, Game::default())?
     .with_frame_limit(
