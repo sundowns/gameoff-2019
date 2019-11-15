@@ -53,9 +53,9 @@ impl<'s> System<'s> for LeapingSystem {
                 if _is_down && attempted_leap_distance <= _leap.range {
                   _leap.leap_ready = false;
                   _leap.is_leaping = true;
-                  _leap.target = Point2::new(world_position.x, world_position.y);
+                  _leap.target = Some(Point2::new(world_position.x, world_position.y));
 
-                  // TODO: Apply a force?? idk
+                  //TODO: remove debug line
                   println!("leaped towards {},{}", world_position.x, world_position.y);
                 }
               }

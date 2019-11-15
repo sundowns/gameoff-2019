@@ -4,7 +4,7 @@ pub struct Leap {
   pub is_leaping: bool,
   pub leap_ready: bool,
   pub range: f32,
-  pub target: Option<T: Point2>,
+  pub target: Option<Point2<f32>>,
 }
 
 impl Default for Leap {
@@ -23,7 +23,7 @@ impl Leap {
     Leap {
       is_leaping: false,
       leap_ready: true,
-      range: 50.0,
+      range: range,
       target: None,
     }
   }
