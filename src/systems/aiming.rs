@@ -31,17 +31,18 @@ impl<'s> System<'s> for AimingSystem {
 
     let world_mouse_position = {
       if let Some((screen_x, screen_y)) = input.mouse_position() {
-        if let Some(camera_entity) = active_camera.entity {
-          let camera = cameras.get(camera_entity).unwrap();
-          let camera_transform = transforms.get(camera_entity).unwrap();
-          let result = camera.projection().screen_to_world_point(
-            Point3::new(screen_x, screen_y, 0.0),
-            Vector2::new(screen.width(), screen.height()),
-            camera_transform,
-          );
-          Some((result.x, result.y))
-        } else {
-          None
+        match active_camera.entity {
+          Some(camera_entity) => {
+            let camera = cameras.get(camera_entity).unwrap();
+            let camera_transform = transforms.get(camera_entity).unwrap();
+            let result = camera.projection().screen_to_world_point(
+              Point3::new(screen_x, screen_y, 0.0),
+              Vector2::new(screen.width(), screen.height()),
+              camera_transform,
+            );
+            Some((result.x, result.y))
+          }
+          _ => None,
         }
       } else {
         None
