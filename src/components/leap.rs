@@ -1,7 +1,10 @@
+use amethyst::core::math::Point2;
+
 pub struct Leap {
   pub is_leaping: bool,
   pub leap_ready: bool,
   pub range: f32,
+  pub target: Option<T: Point2>,
 }
 
 impl Default for Leap {
@@ -10,6 +13,7 @@ impl Default for Leap {
       is_leaping: false,
       leap_ready: true,
       range: 50.0,
+      target: None,
     }
   }
 }
@@ -19,7 +23,8 @@ impl Leap {
     Leap {
       is_leaping: false,
       leap_ready: true,
-      range: range,
+      range: 50.0,
+      target: None,
     }
   }
 }

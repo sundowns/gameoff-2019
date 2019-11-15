@@ -28,7 +28,6 @@ impl<'s> System<'s> for AimingSystem {
     (reticles, mut transforms, cameras, active_camera, screen, input): Self::SystemData,
   ) {
     // TODO: Can we colour the reticle based on player/game state maybe?? - not started
-
     let world_mouse_position = {
       if let Some((screen_x, screen_y)) = input.mouse_position() {
         match active_camera.entity {
