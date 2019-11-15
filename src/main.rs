@@ -32,7 +32,16 @@ fn main() -> amethyst::Result<()> {
     .with_bundle(TransformBundle::new())?
     .with_bundle(InputBundle::<StringBindings>::new().with_bindings_from_file(key_bindings_path)?)?
     .with_bundle(UiBundle::<StringBindings>::new())?
-    .with(systems::LeapingSystem, "leaping_system", &["input_system"])
+    .with(
+      systems::StartLeapingSystem,
+      "start_leaping_system",
+      &["input_system"],
+    )
+    .with(
+      systems::LeapingSystem,
+      "leaping_system",
+      &["start_leaping_system"],
+    )
     .with(systems::AimingSystem, "aiming_system", &[])
     .with_bundle(
       RenderingBundle::<DefaultBackend>::new()
@@ -48,7 +57,7 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderUi::default()),
     )?;
 
-    // TODO: would it be possible to draw some kind of watery background - custom render passes maybe??
+  // TODO: would it be possible to draw some kind of watery background - custom render passes maybe??
 
   let mut game = Application::build(assets_dir, Game::default())?
     .with_frame_limit(
