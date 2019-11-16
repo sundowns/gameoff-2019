@@ -1,7 +1,6 @@
 use amethyst::{
-  core::Transform,
-  ecs::prelude::{Join, Read, ReadStorage, System, WriteStorage},
-  input::{InputHandler, StringBindings},
+  core::{math::Vector2, Transform},
+  ecs::prelude::{Join, ReadStorage, System, WriteStorage},
 };
 
 use crate::components::Leap;
@@ -21,10 +20,16 @@ impl<'s> System<'s> for LeapingSystem {
         Some(target) => {
           if _leap.is_leaping {
             println!("I'm leaping!");
+
+            let directional = Vector2::new(
+              target.x - _transform.translation().x,
+              target.y - _transform.translation().y,
+            );
+
             //TODO: this update loop
             // - check if colliding with target
             //  -- true -> spawn lily pad, set is_leaping=false, set leaping target, start leap cooldown
-            //  -- false -> move towards target
+            //  -- false -> move towards target (normalize directional & move a small amount each frame (some function of sine later to simulate 3D jump?))
           }
         }
         None => {}
