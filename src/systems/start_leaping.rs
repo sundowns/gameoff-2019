@@ -1,6 +1,6 @@
 use amethyst::{
   core::{
-    math::{Point2, Point3, Vector2},
+    math::{Point2, Point3, Vector2, Vector3},
     Transform,
   },
   ecs::prelude::{Join, Read, ReadExpect, ReadStorage, System, WriteStorage},
@@ -53,10 +53,17 @@ impl<'s> System<'s> for StartLeapingSystem {
                 if _is_down && attempted_leap_distance <= _leap.range {
                   _leap.leap_ready = false;
                   _leap.is_leaping = true;
-                  _leap.target = Some(Point2::new(world_position.x, world_position.y));
+                  let target = Point2::new(world_position.x, world_position.y);
+                  _leap.target = Some(target);
 
-                  //TODO: remove debug line
-                  println!("leaped towards {},{}", world_position.x, world_position.y);
+                  let directional = Vector3::new(
+                    target.x - _transform.translation().x,
+                    target.y - _transform.translation().y,
+                    0.0,
+                  );
+
+                  _leap.velocity = directional / directional.magnitude() * 100.0; // TODO: put speed var somewhere
+                  println!("leapead towards {},{}", world_position.x, world_position.y);
                 }
               }
               _ => {}
